@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lavender Birthday Night</title>
+    <!-- Import a fun, bold font -->
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #000000 0%, #0a0a23 50%, #14143f 100%);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', sans-serif;
+            perspective: 1000px;
+        }
+
+        /* --- FRAME OVERLAY (Your Specific Canva Image) --- */
+        .image-frame-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            pointer-events: none;
+            
+            /* The Canva Image URL you provided */
+            background-image: url('https://marketplace.canva.com/EAFJJTkKobE/1/0/1131w/canva-pink-and-green-gradient-celebration-paper-a4-j15WhJZGmGc.jpg');
+            
+            /* Adjusted to fit screen nicely */
+            background-size: 30% 70%; 
+            background-position: center;
+            background-repeat: no-repeat;
+            
+            /* Blend mode to make the white parts transparent */
+            mix-blend-mode: multiply; 
+            opacity: 100;
+        }
+
+        /* --- Star Background --- */
+        .star-field {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle var(--duration) ease-in-out infinite;
+            animation-delay: var(--delay);
+        }
+
+        .star.small { width: 1px; height: 1px; }
+        .star.medium { width: 2px; height: 2px; box-shadow: 0 0 2px #dcd0ff; }
+        .star.large { width: 3px; height: 3px; box-shadow: 0 0 4px #e6e6fa; }
+
+        @keyframes twinkle {
+            0% { opacity: 0.2; transform: scale(1.8); }
+            50% { opacity: 1; transform: scale(3.2); }
+            100% { opacity: 0.2; transform: scale(0.8); }
+        }
+
+        /* --- Shooting Star --- */
+        .shooting-star {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 4px;
+            height: 4px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1),
+                        0 0 0 8px rgba(255, 255, 255, 0.1),
+                        0 0 20px rgba(255, 255, 255, 1);
+            animation: shoot 5s linear infinite;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .shooting-star::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 1px;
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255,255,255,1), transparent);
+        }
+
+        @keyframes shoot {
+            0% { transform: rotate(315deg) translateX(0); opacity: 1; }
+            70% { opacity: 1; }
+            100% { transform: rotate(315deg) translateX(-1000px); opacity: 0; }
+        }
+
+        
+        /* --- Floating Balloons --- */
+        .balloon-container {
+            position: fixed;
+            bottom: -150px;
+            z-index: 8;
+            pointer-events: none;
+            animation: floatUp linear infinite;
+        }
+
+        .balloon {
+            width: 60px;
+            height: 75px;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(255,255,255,0.1));
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+            box-shadow: inset -5px -5px 10px rgba(0,0,0,0.1);
+            position: relative;
+            opacity: 0.9;
+        }
+
+        .balloon::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 40px;
+            background: rgba(255,255,255,0.5);
+        }
+        
+        .balloon::before {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 4px;
+            background: inherit;
+            border-radius: 2px;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.9; }
+            90% { opacity: 0.9; }
+            100% { transform: translateY(-120vh) rotate(10deg); opacity: 0; }
+        }
+
+        /* --- Cake Container --- */
+        .cake-container {
+            position: relative;
+            z-index: 20;
+            width: 320px;
+            height: 420px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.3)); /* Gold glow */
+            animation: hover 10s ease-in-out infinite;
+        }
+
+        @keyframes hover {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* --- SVG Styles --- */
+        #cake-svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .flame {
+            transform-box: fill-box;
+            transform-origin: center bottom;
+            animation: flicker 1.5s ease-in-out infinite alternate;
+        }
+        
+        .flame:nth-child(2n) { animation-delay: 0.3s; }
+        .flame:nth-child(3n) { animation-delay: 0.7s; }
+
+        @keyframes flicker {
+            0% { transform: scale(1) rotate(-2deg); opacity: 0.9; }
+            100% { transform: scale(1.1) rotate(2deg); opacity: 1; }
+        }
+
+        .cake-glow {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255,220,150,0.4) 0%, transparent 70%); /* Warm chocolatey glow */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: -1;
+            mix-blend-mode: screen;
+        }
+
+        /* --- Tiny Butterflies --- */
+        .butterfly {
+            position: fixed;
+            width: 16px;
+            height: 14px;
+            pointer-events: none;
+            z-index: 7; 
+            animation: butterflyFly linear infinite;
+            animation-duration: var(--duration);
+            animation-delay: var(--delay);
+        }
+
+        .butterfly-body {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 2px;
+            height: 8px;
+            background: #333;
+            border-radius: 10px;
+            transform: translate(-50%, -50%);
+        }
+
+        .butterfly-wing {
+            position: absolute;
+            top: 3px;
+            width: 8px;
+            height: 10px;
+            background: radial-gradient(circle at 30% 30%, #ffd700, #ff6b9d);
+            border-radius: 80% 0 80% 0;
+            transform-origin: right center;
+            animation: wingFlap 0.3s ease-in-out infinite alternate;
+            opacity: 0.85;
+        }
+
+        .butterfly-wing.left {
+            left: 0;
+            transform: scaleX(-1);
+            transform-origin: left center;
+        }
+
+        .butterfly-wing.right {
+            right: 0;
+        }
+
+        @keyframes wingFlap {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(60deg); }
+        }
+
+        @keyframes butterflyFly {
+            0% {
+                left: var(--start-x);
+                top: var(--start-y);
+                opacity: 0;
+            }
+            5% { opacity: 1; }
+            95% { opacity: 1; }
+            100% {
+                left: var(--end-x);
+                top: var(--end-y);
+                opacity: 0;
+            }
+        }
+
+        /* --- Vertical Image Carousel --- */
+        .vertical-carousel-wrapper {
+            position: fixed;
+            top: 0;
+            width: 180px;
+            height: 100vh;
+            overflow: hidden;
+            z-index: 15;
+            pointer-events: none;
+        }
+
+        .vertical-carousel-wrapper.left {
+            left: 30px;
+        }
+
+        .vertical-carousel-wrapper.right {
+            right: 30px;
+        }
+
+        .vertical-carousel {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .vertical-carousel.scroll-up {
+            animation: scrollUp 10s linear infinite;
+        }
+
+        .vertical-carousel.scroll-down {
+            animation: scrollDown 10s linear infinite;
+        }
+
+        .vertical-carousel img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+            border: 3px solid rgba(255,255,255,0.3);
+        }
+
+        @keyframes scrollUp {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-50%);
+            }
+        }
+
+        @keyframes scrollDown {
+            0% {
+                transform: translateY(-50%);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        /* --- Footer Text --- */
+        .footer-text {
+            position: fixed;
+            bottom: 30px;
+            width: 100%;
+            text-align: center;
+            z-index: 50;
+        }
+
+        .anime-text-layer {
+            position: relative;
+            display: inline-block;
+            animation: bounceText 2s infinite ease-in-out;
+        }
+
+        .anime-text-base,
+        .anime-text-top {
+            font-family: 'Bangers', cursive;
+            font-size: 7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .anime-text-base {
+            color: #FFD700;
+            text-shadow: 
+                4px 4px 0px #FF4500,
+                8px 8px 0px #4B0082,
+                10px 10px 2px rgba(0,0,0,0.5);
+            -webkit-text-stroke: 4px #000;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 1;
+        }
+
+        .anime-text-top {
+            background: linear-gradient(180deg, #FFFFFF 20%, #FFD700 45%, #FF8C00 80%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes bounceText {
+            0%, 100% { transform: rotate(-1deg) scale(1); }
+            50% { transform: rotate(1deg) scale(1.05); }
+        }
+
+        @media (max-width: 600px) {
+            .anime-text-base, .anime-text-top {
+                font-size: 2.5rem;
+                text-shadow: 
+                    2px 2px 0px #FF4500,
+                    4px 4px 0px #4B0082;
+            }
+            
+            .vertical-carousel-wrapper {
+                width: 120px;
+            }
+            
+            .vertical-carousel img {
+                height: 150px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Background Stars -->
+    <div class="star-field" id="starField"></div>
+    <div class="shooting-star" style="top: 10%; left: 80%; animation-delay: 2s;"></div>
+    
+    <!-- FRAME OVERLAY -->
+    <div class="image-frame-overlay"></div>
+
+    <!-- Left Vertical Image Carousel (Scrolling Up) -->
+    <div class="vertical-carousel-wrapper left">
+        <div class="vertical-carousel scroll-up" id="imageCarouselLeft">
+            <!-- Images will be loaded here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Right Vertical Image Carousel (Scrolling Down) -->
+    <div class="vertical-carousel-wrapper right">
+        <div class="vertical-carousel scroll-down" id="imageCarouselRight">
+            <!-- Images will be loaded here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Central Modern Chocolate Cake -->
+    <div class="cake-container">
+        <div class="cake-glow"></div>
+        <svg id="cake-svg" viewBox="0 0 200 240">
+            <defs>
+                <!-- SPONGE GRADIENT -->
+                <linearGradient id="chocolate-sponge" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#3E2723" /> <!-- Very dark brown -->
+                    <stop offset="50%" style="stop-color:#5D4037" /> <!-- Rich brown -->
+                    <stop offset="100%" style="stop-color:#3E2723" /> <!-- Dark brown -->
+                </linearGradient>
+
+                <!-- GLOSSY GANACHE GRADIENT -->
+                <linearGradient id="ganache-drip" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#210b05" />
+                    <stop offset="30%" style="stop-color:#3E2723" /> <!-- Glossy highlight -->
+                    <stop offset="100%" style="stop-color:#1a0500" /> <!-- Deepest chocolate -->
+                </linearGradient>
+                
+                <!-- STRAWBERRY GRADIENT -->
+                <radialGradient id="strawberry-red" cx="30%" cy="30%" r="70%">
+                     <stop offset="0%" style="stop-color:#ff4d4d" />
+                     <stop offset="100%" style="stop-color:#cc0000" />
+                </radialGradient>
+
+                <!-- GOLD GRADIENT -->
+                <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#ffd700" />
+                    <stop offset="50%" style="stop-color:#fbc02d" />
+                    <stop offset="100%" style="stop-color:#b8860b" />
+                </linearGradient>
+                
+                 <!-- WHIPPED CREAM -->
+                <linearGradient id="cream-white" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" style="stop-color:#ffffff" />
+                    <stop offset="100%" style="stop-color:#f0f0f0" />
+                </linearGradient>
+            </defs>
+
+            <!-- PLATE -->
+            <ellipse cx="100" cy="225" rx="95" ry="18" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+
+            <!-- BOTTOM TIER -->
+            <path d="M 30 190 L 30 140 Q 100 160 170 140 L 170 190 Q 100 220 30 190" fill="url(#chocolate-sponge)"/>
+            <path d="M 30 140 Q 100 160 170 140 Q 100 120 30 140" fill="#4E342E"/> <!-- Top surface of bottom tier -->
+            
+            <!-- Bottom Drips -->
+            <path d="M 30 142 Q 40 170 50 142 T 70 160 T 90 145 T 110 165 T 130 145 T 150 160 T 170 142" fill="none" stroke="url(#ganache-drip)" stroke-width="8" stroke-linecap="round" />
+            
+             <!-- Bottom Sprinkles -->
+            <rect x="50" y="160" width="4" height="2" fill="#ff6b6b" transform="rotate(20 50 160)"/>
+            <rect x="70" y="170" width="4" height="2" fill="#ffd700" transform="rotate(-15 70 170)"/>
+            <rect x="90" y="155" width="4" height="2" fill="#4ecdc4" transform="rotate(45 90 155)"/>
+            <rect x="120" y="165" width="4" height="2" fill="#ff9ff3" transform="rotate(-30 120 165)"/>
+            <rect x="140" y="150" width="4" height="2" fill="#ffffff" transform="rotate(10 140 150)"/>
+
+
+            <!-- MIDDLE TIER -->
+            <path d="M 45 140 L 45 90 Q 100 110 155 90 L 155 140 Q 100 160 45 140" fill="url(#chocolate-sponge)"/>
+             <path d="M 45 90 Q 100 110 155 90 Q 100 70 45 90" fill="#3E2723"/> <!-- Top surface of middle tier -->
+
+            <!-- Middle Drips -->
+            <path d="M 45 92 Q 55 125 65 92 T 85 110 T 100 130 T 115 105 T 135 120 T 155 92" fill="url(#ganache-drip)"/>
+
+            <!-- TOP TIER -->
+            <path d="M 60 90 L 60 50 Q 100 65 140 50 L 140 90 Q 100 110 60 90" fill="url(#chocolate-sponge)"/>
+            <path d="M 60 50 Q 100 65 140 50 Q 100 35 60 50" fill="#210b05"/> <!-- Top surface of top tier -->
+            
+             <!-- Top Drips (Thick) -->
+            <path d="M 60 52 Q 70 80 80 52 T 100 75 T 120 55 T 140 52" fill="url(#ganache-drip)" stroke="url(#ganache-drip)" stroke-width="2"/>
+
+
+            <!-- DECORATIONS -->
+            
+            <!-- Whipped Cream Dollops -->
+            <circle cx="70" cy="50" r="8" fill="url(#cream-white)" />
+            <circle cx="130" cy="50" r="8" fill="url(#cream-white)" />
+            <circle cx="100" cy="55" r="8" fill="url(#cream-white)" />
+            <circle cx="85" cy="45" r="6" fill="url(#cream-white)" />
+            <circle cx="115" cy="45" r="6" fill="url(#cream-white)" />
+            
+             <!-- Strawberry on top -->
+            <path d="M 92 45 Q 100 65 108 45 Q 100 35 92 45" fill="url(#strawberry-red)" />
+            <path d="M 94 38 L 98 42 L 102 38 L 100 45 Z" fill="green" /> <!-- Leaves -->
+
+            <!-- Chocolate Squares -->
+            <rect x="75" y="30" width="10" height="15" fill="#3e2723" stroke="#5d4037" stroke-width="1" transform="rotate(-15 75 30)" />
+            <rect x="115" y="30" width="10" height="15" fill="#3e2723" stroke="#5d4037" stroke-width="1" transform="rotate(15 115 30)" />
+
+            <!-- GOLD BALL ACCENTS -->
+            <circle cx="60" cy="90" r="4" fill="url(#gold)" />
+            <circle cx="140" cy="90" r="4" fill="url(#gold)" />
+            <circle cx="100" cy="130" r="5" fill="url(#gold)" />
+            <circle cx="30" cy="140" r="4" fill="url(#gold)" />
+            <circle cx="170" cy="140" r="4" fill="url(#gold)" />
+
+            <!-- CANDLES -->
+            <!-- Left Candle -->
+            <rect x="80" y="15" width="5" height="30" fill="url(#gold)"/>
+            <path class="flame" d="M 82.5 15 Q 78 5 82.5 -5 Q 87 5 82.5 15" fill="#ff9900" />
+            
+             <!-- Center Candle (Tall) -->
+            <rect x="97.5" y="5" width="5" height="40" fill="url(#gold)"/>
+            <path class="flame" d="M 100 5 Q 96 -10 100 -20 Q 104 -10 100 5" fill="#ff4d4d" />
+
+            <!-- Right Candle -->
+            <rect x="115" y="15" width="5" height="30" fill="url(#gold)"/>
+            <path class="flame" d="M 117.5 15 Q 113 5 117.5 -5 Q 122 5 117.5 15" fill="#ff9900" />
+        </svg>
+    </div>
+
+    <!-- Animated Footer Text -->
+    <div class="footer-text">
+        <div class="anime-text-layer">
+            <span class="anime-text-base">happy birthday Anisha Sarangi</span>
+            <span class="anime-text-top">happy birthday Anisha Sarangi</span>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. STAR GENERATION
+            const starField = document.getElementById('starField');
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                const size = Math.random() > 0.9 ? 'large' : (Math.random() > 0.6 ? 'medium' : 'small');
+                star.classList.add('star', size);
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.setProperty('--duration', 2 + Math.random() * 3 + 's');
+                star.style.setProperty('--delay', Math.random() * 2 + 's');
+                starField.appendChild(star);
+            }
+
+            // 2. BALLOON GENERATOR
+            const colors = ['#ff6b6b', '#ffd700', '#9d8ec4', '#81ecec', '#fab1a0'];
+            function createBalloon() {
+                const b = document.createElement('div');
+                b.className = 'balloon-container';
+                b.style.left = Math.random() * 100 + 'vw';
+                b.style.animationDuration = (Math.random() * 5 + 10) + 's';
+                b.style.transform = `scale(${Math.random() * 0.5 + 0.5})`;
+
+                const balloonGraphic = document.createElement('div');
+                balloonGraphic.className = 'balloon';
+                balloonGraphic.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                b.appendChild(balloonGraphic);
+                document.body.appendChild(b);
+
+                setTimeout(() => { b.remove(); }, 15000);
+            }
+
+            setInterval(createBalloon, 800);
+            for(let i=0; i<5; i++) createBalloon();
+
+            
+            // 3. PARALLAX EFFECT
+            document.addEventListener('mousemove', (e) => {
+                const moveX = (e.clientX - window.innerWidth / 2) * 0.01;
+                const moveY = (e.clientY - window.innerHeight / 2) * 0.01;
+                starField.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            });
+
+            // 4. TINY BUTTERFLIES
+            function createButterfly() {
+                const butterfly = document.createElement('div');
+                butterfly.className = 'butterfly';
+                const startX = Math.random() * 100;
+                const startY = Math.random() * 100;
+                const endX = Math.random() * 100;
+                const endY = Math.random() * 100;
+                const duration = 8 + Math.random() * 7;
+                const delay = Math.random() * 3;
+
+                butterfly.style.setProperty('--start-x', startX + '%');
+                butterfly.style.setProperty('--start-y', startY + '%');
+                butterfly.style.setProperty('--end-x', endX + '%');
+                butterfly.style.setProperty('--end-y', endY + '%');
+                butterfly.style.setProperty('--duration', duration + 's');
+                butterfly.style.setProperty('--delay', delay + 's');
+
+                butterfly.innerHTML = `
+                    <div class="butterfly-body"></div>
+                    <div class="butterfly-wing left"></div>
+                    <div class="butterfly-wing right"></div>
+                `;
+
+                document.body.appendChild(butterfly);
+                setTimeout(() => { butterfly.remove(); }, (duration + delay) * 1000);
+            }
+
+            setInterval(createButterfly, 600);
+            for (let i = 0; i < 10; i++) setTimeout(() => createButterfly(), i * 100);
+
+            // 5. VERTICAL IMAGE CAROUSELS (BOTH SIDES)
+            const imageCarouselLeft = document.getElementById('imageCarouselLeft');
+            const imageCarouselRight = document.getElementById('imageCarouselRight');
+            
+            // Replace these with your actual image paths
+            const imageFiles = [
+                'new/IMG-20251204-WA0059.jpg',
+                'new/IMG-20251207-WA0018.jpg',
+                'new/IMG-20251207-WA0027.jpg'
+                
+            ];
+
+            // Create images twice for seamless loop - LEFT SIDE
+            imageFiles.concat(imageFiles).forEach(src => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = 'Gallery image';
+                img.onerror = function() {
+                    // Fallback placeholder if image doesn't exist
+                    this.src = 'https://via.placeholder.com/180x220/764ba2/ffffff?text=Photo';
+                };
+                imageCarouselLeft.appendChild(img);
+            });
+
+            // Create images twice for seamless loop - RIGHT SIDE
+            imageFiles.concat(imageFiles).forEach(src => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.alt = 'Gallery image';
+                img.onerror = function() {
+                    // Fallback placeholder if image doesn't exist
+                    this.src = 'https://via.placeholder.com/180x220/432c7a/ffffff?text=Photo';
+                };
+                imageCarouselRight.appendChild(img);
+            });
+        });
+    </script>
+</body>
+</html>
